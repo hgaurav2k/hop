@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title> Hand-object interaction pretraining from videos</title>
+  <link href="res/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="res/academicons-1.9.2/css/academicons.min.css"/>
+  <script src="res/js/fa.js"></script>
+
+	<style>
+      .header {
+        width: auto;
+        max-width: auto;
+        padding-top: 4rem;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        background-color: rgba(250, 250, 250)
+      }
+
+      a:link,a:visited
+      {
+        color: #0071bc;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #208799;
+      }
+
+      hr {
+        border: 10;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 113, 188, 0.2), rgba(0, 0, 0, 0.1), rgba(0, 113, 188, 0.2));
+      }
+
+      .gap-30 {height:30px;}
+      .gap-20 {height:20px;}
+      .gap-10 {height:10px;}
+      .gap-5 {height:5px;}
+
+      .no-gutters {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    .btn {
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+		}
+
+
+	</style>
+</head>
+
+<div class="header">
+	<div class="container">
+		<center><h1>Hand-object interaction pretraining from videos</h1></center>
+		<div class="gap-20"></div>
+		<!-- ------------------- Author Names -------------------
+		<center>
+			<a href="https://antonilo.github.io/" target="_blank" style="font-size:20px">Antonio Loquercio</a><sup
+						style="font-size:14px">*</sup>,
+			<a href="https://ashish-kmr.github.io/" target="_blank" style="font-size:20px">Ashish Kumar</a><sup
+						style="font-size:14px">*</sup>,
+			<a href="https://people.eecs.berkeley.edu/~malik/" target="_blank" style="font-size:20px">Jitendra Malik</a><sup
+						style="font-size:14px"></sup>
+		</center> -->
+
+		<div class="gap-10"></div>
+		<!-- <center>
+			UC Berkeley
+		</center> -->
+
+		<div class="gap-20"></div>
+
+		<center>
+			<div class="btn-group" role="group">
+
+				<a href="pdf/manuscript.pdf">
+					<button type="button" class="btn btn-dark">
+						<span class="icon">
+              <i class="fas fa-file-pdf"></i> Paper
+            </span>
+					</button>
+				</a>
+
+				<!-- <a href="https://arxiv.org/abs/2211.03785">
+					<button type="button" class="btn btn-dark">
+          <span><i class="ai ai-arxiv"></i> Arxiv</span>
+					</button>
+				</a> -->
+
+
+				<!-- <a href="https://twitter.com/antoniloq/status/1590152618617475072?s=20&t=ui_c_kS42q-_gY09mXtEMQ">
+					<button type="button" class="btn btn-dark">
+						<span class="icon">
+              <i class="fab fa-twitter"></i> Summary
+            </span>
+					</button>
+				</a> -->
+
+				<!-- <a href="https://github.com/antonilo/vision_locomotion">
+					<button type="button" class="btn btn-dark">
+						<span class="icon">
+              <i class="fab fa-github"></i> Code
+            </span>
+					</button>
+				</a> -->
+
+				<!-- <a href="https://youtu.be/as5AC-3r75U">
+					<button type="button" class="btn btn-dark">
+						<span class="icon">
+              <i class="fab fa-youtube"></i> Pitch Video
+            </span>
+					</button>
+				</a> -->
+
+			</div>
+		</center>
+
+	</div>
+</div>
+
+<div class="container">
+
+    <!-- <center>
+    <iframe width="70%" height="400" src="https://www.youtube.com/embed/d7I34YIdMdk" title="Learning to See" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </center> -->
+    <!-- <center>
+        <p style="width:90%; text-align: center; white-space: normal;">
+    <b>TL;DR: Learning to walk from pixels in the real world by using proprioception as supervision. </b>
+    </center> -->
+
+
+
+    <!-- ------------------- abstract ------------------- -->
+    <div class="gap-30"></div>
+    <h2 style="text-align: center"> Abstract </h2>
+    <div class="gap-10"></div>
+    <center>
+        <p style="width:90%; text-align: justify; white-space: normal;"> 
+We present an approach to learn general robot manipulation priors from 3D hand-object interaction trajectories. We build a framework to use in
+the-wild videos to generate sensorimotor robot trajectories. We do so by lifting both the human hand and the manipulated object in a shared 3D space and retargeting human motions to robot actions. Generative modeling on this data gives
+us a task-agnostic base policy. This policy captures a general yet flexible manipulation prior. We empirically demonstrate that finetuning this policy, with both
+reinforcement learning (RL) and behavior cloning (BC), enables sample-efficient adaptation to downstream tasks and simultaneously improves robustness and generalizability compared to alternate approaches.</p> </center>
+    <div class="gap-10"></div>
+
+    <!-- <center><p style="width:90%; text-align: justify; white-space: normal;">
+      We study how quickly the policy can adapt to shifts in the visual field. To do so, we change the camera orientation. This results in a large variation in the field of view, as shown in the image below. Note that after rotation, the robot cannot see the terrain in front of it.
+    </p></center> -->
+
+    <!-- <center>
+		<img class="img-fluid" src="images/prism-expt_camera.png" style="margin-bottom: 30px" width="98%" alt=""><br>
+	</center> -->
+
+  <!-- <div class="gap-10"></div> -->
+
+  <div class="gap-30"></div>
+  <h1 style="text-align: center"> Summary </h1>
+  <div class="gap-10"></div>
+
+  On this webpage, we present 1) video demonsrations of our approach and comparison with baselines. 2) Examples from the robot training corpus after sim-in-the-loop retargeting, and 3) Demonstrations of learnt behaviours in simulated RL tasks.  
+
+  <div style="font-weight:bold"> For the videos below, we run each policy 3 times and provide a successful demo if there is atleast
+    one success, else we provide a failure demo.</div>
+
+
+
+
+  <h2 style="text-align: center; text-decoration: underline;"> Comparison with baselines </h2>
+
+  <div class="gap-10"></div>
+
+  <h2 style="text-align: center; text-decoration: underline;"> Grasp and Lift </h2>
+  This task involves learning a policy for grasping 4 different objects with different shapes and affordances. In comparison to baselines, our policy is smooth and has higher success rate.
+  
+  <div class="row no-gutters">
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Ours </b></center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cube_ours.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+    <div class="col" style="font-size: 30px ; color:red ; ">
+      <center> <b> Diffusion Policy </b> </center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cube_diffusion.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Image Net </b> </center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cube_imagenet.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+  </div>
+
+  <div class="gap-10"></div>
+
+  <div class="row no-gutters">
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Ours </b></center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_bottle_ours.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Diffusion Policy </b> </center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_bottle_diffusion.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Image Net </b> </center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_bottle_imagenet.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+  </div>
+
+  <div class="row no-gutters">
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Ours </b></center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cup_ours.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+    <div class="col" style="font-size: 30px ; color:red ; ">
+      <center> <b> Diffusion Policy </b> </center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cup_diffusion.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+    <div class="col" style="font-size: 30px ; color:red ; ">
+      <center> <b> Image Net </b> </center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cup_imagenet.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+  </div>
+
+  <div class="row no-gutters">
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Ours </b></center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_dino_ours.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Diffusion Policy </b> </center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_dino_diffusion.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+    <div class="col" style="font-size: 30px ; color:green ; ">
+      <center> <b> Image Net </b> </center>
+      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_dino_imagenet.MOV" width="97%"
+        style="border-radius:10px; border:1px solid black"></video>
+    </div>
+  </div>
+
+    <hr>
+    <h2 style="text-align: center; text-decoration: underline;"> Grasp and Pour </h2>
+    <div class="gap-10"></div>
+
+    <div class="row no-gutters">
+      <div class="col" style="font-size: 30px ; color:green ; ">
+        <center> <b> Ours </b></center>
+        <video controls playsinline autoplay loop muted src="res/pour_demos/compressed_pour_ours.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col" style="font-size: 30px ; color:green ; ">
+        <center> <b> Diffusion Policy </b> </center>
+        <video controls playsinline autoplay loop muted src="res/pour_demos/compressed_pour_diffusion.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col" style="font-size: 30px ; color:green ; ">
+        <center> <b> Image Net </b> </center>
+        <video controls playsinline autoplay loop muted src="res/pour_demos/compressed_pour_imagenet.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+    </div>
+
+
+
+<hr>
+    <h2 style="text-align: center; text-decoration: underline;"> Grasp and Throw </h2>
+
+    <div class="row no-gutters">
+      <div class="col" style="font-size: 30px ; color:green ; ">
+        <center> <b> Ours </b></center>
+        <video controls playsinline autoplay loop muted src="res/throw_demos/compressed_throw_ours.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col" style="font-size: 30px ; color:green ; ">
+        <center> <b> Diffusion Policy </b> </center>
+        <video controls playsinline autoplay loop muted src="res/throw_demos/compressed_throw_diffusion.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col" style="font-size: 30px ; color:green ; ">
+        <center> <b> Image Net </b> </center>
+        <video controls playsinline autoplay loop muted src="res/throw_demos/compressed_throw_imagenet.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2 style="text-align: center; text-decoration: underline;"> Performance on OOD objects </h2>
+    We present the performance of our policy on the <style="font:italics"> Grasp and Lift</style> task with OOD objects.
+    <div class="row no-gutters">
+      <div class="col" style="font-size: 30px">
+        <video controls playsinline autoplay loop muted src="res/ood/compressed_bottle_pour.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col" style="font-size: 30px">
+        <video controls playsinline autoplay loop muted src="res/ood/compressed_clipper.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col" style="font-size: 30px">
+        <video controls playsinline autoplay loop muted src="res/ood/compressed_medicine.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col" style="font-size: 30px">
+        <video controls playsinline autoplay loop muted src="res/ood/compressed_plier.MOV" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+    </div>
+
+
+
+    <h2 style="text-align: center; text-decoration: underline;"> Samples from sim-in-the-loop retargeting</h2>
+
+    <div class="gap-10"></div>
+    <!-- <center><p style="width:90%; text-align: justify; white-space: normal;">
+        We show that our policy is better than the blind policy in several environments.
+    </p></center> -->
+
+    We provide examples of human videos and the corresponding robot trajectories after sim-in-the-loop retargeting. 
+
+    <div class="row no-gutters">
+        <div class="col" style="font-size: 30px">
+          <center > <b> Human video </b></center>
+            <video controls playsinline autoplay loop muted src="res/human2robot/compressed_drill_orig.mp4" width="97%"
+                   style="border-radius:10px; border:1px solid black"></video>
+        </div>
+        <div class="col" style="font-size: 30px">
+          <center> <b> Robot in simulation </b> </center>
+            <video controls playsinline autoplay loop muted src="res/human2robot/compressed_drill_convert.mp4" width="97%"
+                   style="border-radius:10px; border:1px solid black"></video>
+        </div>
+    </div>
+
+    <div class="row no-gutters">
+        <div class="col">
+            <video controls playsinline autoplay loop muted src="res/human2robot/compressed_pitcher_orig.mp4" width="97%"
+                   style="border-radius:10px; border:1px solid black"></video>
+        </div>
+        <div class="col">
+            <video controls playsinline autoplay loop muted src="res/human2robot/compressed_pitcher_convert.mp4" width="97%"
+                   style="border-radius:10px; border:1px solid black"></video>
+        </div>
+    </div>
+    <hr>
+	<hr>
+
+
+    <h2 style="text-align: center; text-decoration: underline;"> Simulation tasks</h2>
+
+    We provide examples of learnt behaviours in simulated RL tasks with our approach.
+
+    <div class="gap-30"></div>
+    <h3 style="text-align: center; text-decoration: underline;"> Grasp and Lift </h3>
+    
+    <div class="row no-gutters">
+      <div class="col">
+        <video controls playsinline autoplay loop muted src="res/grasp_sim/compressed_grasp_1.mp4" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col">
+        <video controls playsinline autoplay loop muted src="res/grasp_sim/compressed_grasp_2.mp4" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col">
+        <video controls playsinline autoplay loop muted src="res/grasp_sim/compressed_grasp_3.mp4" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+    </div>
+
+    <div class="gap-30"></div>
+    <h3 style="text-align: center; text-decoration: underline;">  Grasp and Throw </h3>
+
+    
+    <div class="row no-gutters">
+      <div class="col">
+        <video controls playsinline autoplay loop muted src="res/throw_sim/compressed_throw_1.mp4" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col">
+        <video controls playsinline autoplay loop muted src="res/throw_sim/compressed_throw_2.mov" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+      <div class="col">
+        <video controls playsinline autoplay loop muted src="res/throw_sim/compressed_throw_3.mp4" width="97%"
+          style="border-radius:10px; border:1px solid black"></video>
+      </div>
+    </div>
+    
+    
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="res/js/bootstrap.min.js"></script>
+
+</div>
+</html>
