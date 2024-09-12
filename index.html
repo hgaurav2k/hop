@@ -1,445 +1,532 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title> Hand-object interaction pretraining from videos</title>
-  <link href="res/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="res/academicons-1.9.2/css/academicons.min.css"/>
-  <script src="res/js/fa.js"></script>
-
-	<style>
-      .header {
-        width: auto;
-        max-width: auto;
-        padding-top: 4rem;
-        padding-bottom: 2rem;
-        margin-bottom: 2rem;
-        background-color: rgba(250, 250, 250)
-      }
-
-      a:link,a:visited
-      {
-        color: #0071bc;
-        text-decoration: none;
-      }
-
-      a:hover {
-        color: #208799;
-      }
-
-      hr {
-        border: 10;
-        height: 1px;
-        background-image: linear-gradient(to right, rgba(0, 113, 188, 0.2), rgba(0, 0, 0, 0.1), rgba(0, 113, 188, 0.2));
-      }
-
-      .gap-30 {height:30px;}
-      .gap-20 {height:20px;}
-      .gap-10 {height:10px;}
-      .gap-5 {height:5px;}
-
-      .no-gutters {
-      margin-right: 0;
-      margin-left: 0;
-    }
-
-    .btn {
-      margin-left: 0.2rem;
-      margin-right: 0.2rem;
-		}
-
-
-	</style>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="main.css">
+    <title>Hand-object interaction pretraining from videos</title>
 </head>
-
-<div class="header">
-	<div class="container">
-		<center><h1>Hand-object interaction pretraining from videos</h1></center>
-		<div class="gap-20"></div>
-		<!-- ------------------- Author Names -------------------
-		<center>
-			<a href="https://antonilo.github.io/" target="_blank" style="font-size:20px">Antonio Loquercio</a><sup
-						style="font-size:14px">*</sup>,
-			<a href="https://ashish-kmr.github.io/" target="_blank" style="font-size:20px">Ashish Kumar</a><sup
-						style="font-size:14px">*</sup>,
-			<a href="https://people.eecs.berkeley.edu/~malik/" target="_blank" style="font-size:20px">Jitendra Malik</a><sup
-						style="font-size:14px"></sup>
-		</center> -->
-
-		<div class="gap-10"></div>
-		<!-- <center>
-			UC Berkeley
-		</center> -->
-
-		<div class="gap-20"></div>
-
-		<center>
-			<div class="btn-group" role="group">
-
-				<a href="pdf/manuscript.pdf">
-					<button type="button" class="btn btn-dark">
-						<span class="icon">
-              <i class="fas fa-file-pdf"></i> Paper
-            </span>
-					</button>
-				</a>
-
-				<!-- <a href="https://arxiv.org/abs/2211.03785">
-					<button type="button" class="btn btn-dark">
-          <span><i class="ai ai-arxiv"></i> Arxiv</span>
-					</button>
-				</a> -->
-
-
-				<!-- <a href="https://twitter.com/antoniloq/status/1590152618617475072?s=20&t=ui_c_kS42q-_gY09mXtEMQ">
-					<button type="button" class="btn btn-dark">
-						<span class="icon">
-              <i class="fab fa-twitter"></i> Summary
-            </span>
-					</button>
-				</a> -->
-
-				<!-- <a href="https://github.com/antonilo/vision_locomotion">
-					<button type="button" class="btn btn-dark">
-						<span class="icon">
-              <i class="fab fa-github"></i> Code
-            </span>
-					</button>
-				</a> -->
-
-				<!-- <a href="https://youtu.be/as5AC-3r75U">
-					<button type="button" class="btn btn-dark">
-						<span class="icon">
-              <i class="fab fa-youtube"></i> Pitch Video
-            </span>
-					</button>
-				</a> -->
-
-			</div>
-		</center>
-
-	</div>
+<body>
+<div id="title_slide">
+    <div class="title_left">
+        <h1 style="color: #002676;">Hand-object interaction pretraining from videos</h1>
+        <div class="author-container">
+            <div class="grid-item"><a href="https://hgaurav2k.github.io">Himanshu Gaurav Singh*</a></div>
+            <div class="grid-item"><a href=https://antonilo.github.io>Antonio Loquercio*</a></div>
+            <div class="grid-item"><a href=https://sferrazza.cc>Carlo Sferrazza</a></div>
+            <div class="grid-item"><a href="https://janehwu.github.io">Jane Wu</a></div>
+            <div class="grid-item"><a href="https://haozhi.io">Haozhi Qi</a></div>
+            <div class="grid-item"><a href="http://people.eecs.berkeley.edu/~abbeel/">Pieter Abbeel</a></div>
+            <div class="grid-item"><a href="http://people.eecs.berkeley.edu/~malik/">Jitendra Malik</a></div>
+        </div>
+        <div class="mobile-author-container-1">
+            <div class="grid-item"><a href="https://hgaurav2k.github.io">Himanshu Gaurav Singh</a></div>
+            <div class="grid-item"><a href=https://antonilo.github.io>Antonio Loquercio</a></div>
+            <div class="grid-item"><a href=https://sferrazza.cc>Carlos Sferrazza</a></div>
+        </div>
+        <div class="mobile-author-container-2">
+            <div class="grid-item"><a href="https://janehwu.github.io">Jane Wu</a></div>
+            <div class="grid-item"><a href="https://haozhi.io">Haozhi Qi</a></div>
+            <div class="grid-item"><a href="http://people.eecs.berkeley.edu/~abbeel/">Pieter Abbeel</a></div>
+            <div class="grid-item"><a href="http://people.eecs.berkeley.edu/~malik/">Jitendra Malik</a></div>
+        </div>
+        <div class="berkeley">
+            <p style="color: #002676;">University of California, Berkeley</p>
+        </div>
+        <div class="button-container">
+            <a href="web_assets/manuscript.pdf" class="button">Paper</a>
+            <a href="" class="button">Code</a>
+        </div>
+        <div id="abstract" class="grid-container">
+            <p>
+                We present an approach to learn general robot manipulation priors from 3D hand-object interaction trajectories. We build
+                a framework to use in-the-wild videos to generate sensorimotor robot trajectories. We do so by lifting both the human
+                hand and the manipulated object in a shared 3D space and retargeting human motions to robot actions. Generative modeling
+                on this data gives us a task-agnostic base policy. This policy captures a general yet flexible manipulation prior. We
+                empirically demonstrate that finetuning this policy, with both reinforcement learning (RL) and behavior cloning (BC),
+                enables sample-efficient adaptation to downstream tasks and simultaneously improves robustness and generalizability
+                compared to alternate approaches.
+            </p>
+        </div>
+    </div>
 </div>
-
-<div class="container">
-
-    <!-- <center>
-    <iframe width="70%" height="400" src="https://www.youtube.com/embed/d7I34YIdMdk" title="Learning to See" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </center> -->
-    <!-- <center>
-        <p style="width:90%; text-align: center; white-space: normal;">
-    <b>TL;DR: Learning to walk from pixels in the real world by using proprioception as supervision. </b>
-    </center> -->
-
-
-
-    <!-- ------------------- abstract ------------------- -->
-    <div class="gap-30"></div>
-    <h2 style="text-align: center"> Abstract </h2>
-    <div class="gap-10"></div>
-    <center>
-        <p style="width:90%; text-align: justify; white-space: normal;"> 
-We present an approach to learn general robot manipulation priors from 3D hand-object interaction trajectories. We build a framework to use in
-the-wild videos to generate sensorimotor robot trajectories. We do so by lifting both the human hand and the manipulated object in a shared 3D space and retargeting human motions to robot actions. Generative modeling on this data gives
-us a task-agnostic base policy. This policy captures a general yet flexible manipulation prior. We empirically demonstrate that finetuning this policy, with both
-reinforcement learning (RL) and behavior cloning (BC), enables sample-efficient adaptation to downstream tasks and simultaneously improves robustness and generalizability compared to alternate approaches.</p> </center>
-    <div class="gap-10"></div>
-
-    <!-- <center><p style="width:90%; text-align: justify; white-space: normal;">
-      We study how quickly the policy can adapt to shifts in the visual field. To do so, we change the camera orientation. This results in a large variation in the field of view, as shown in the image below. Note that after rotation, the robot cannot see the terrain in front of it.
-    </p></center> -->
-
-    <!-- <center>
-		<img class="img-fluid" src="images/prism-expt_camera.png" style="margin-bottom: 30px" width="98%" alt=""><br>
-	</center> -->
-
-  <!-- <div class="gap-10"></div> -->
-
-  <div class="gap-30"></div>
-  <h1 style="text-align: center"> Summary </h1>
-  <div class="gap-10"></div>
-
-  On this webpage, we present 1) video demonsrations of our approach and comparison with baselines. 2) Examples from the robot training corpus after sim-in-the-loop retargeting, and 3) Demonstrations of learnt behaviours in simulated RL tasks.  
-
-  <div style="font-weight:bold"> For the videos below, we run each policy 3 times and provide a successful demo if there is atleast
-    one success, else we provide a failure demo.</div>
-
-  <h2 style="text-align: center; text-decoration: underline;"> Comparison with baselines </h2>
-  
-  This section contains demonstrations of our approach compared to baselines in the real world. Numerical results can be found in the Supplementary (Section 8.1). We want to understand how conventional methods for behavior cloning work in our setting, where a single depth camera and a limited number of demonstrations are available.
-  <div class="gap-10"></div>
-
-  <h2 style="text-align: center; text-decoration: underline;"> Grasp and Lift </h2>
-  This task involves learning a policy for grasping 4 different objects with different shapes and affordances. In comparison to baselines, our policy is smooth and has higher success rate.
-  
-  <div class="row no-gutters">
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Ours </b></center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cube_ours.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px ; color:red ; ">
-      <center> <b> Diffusion Policy </b> </center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cube_diffusion.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Image Net </b> </center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cube_imagenet.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-  </div>
-
-  <div class="gap-10"></div>
-
-  <div class="row no-gutters">
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Ours </b></center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_bottle_ours.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Diffusion Policy </b> </center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_bottle_diffusion.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Image Net </b> </center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_bottle_imagenet.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-  </div>
-
-  <div class="row no-gutters">
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Ours </b></center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cup_ours.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px ; color:red ; ">
-      <center> <b> Diffusion Policy </b> </center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cup_diffusion.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px ; color:red ; ">
-      <center> <b> Image Net </b> </center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_cup_imagenet.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-  </div>
-
-  <div class="row no-gutters">
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Ours </b></center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_dino_ours.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Diffusion Policy </b> </center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_dino_diffusion.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px ; color:green ; ">
-      <center> <b> Image Net </b> </center>
-      <video controls playsinline autoplay loop muted src="res/grasp_demos/compressed_dino_imagenet.MOV" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-  </div>
-
-    <hr>
-    <h2 style="text-align: center; text-decoration: underline;"> Grasp and Pour </h2>
-    <div class="gap-10"></div>
-
-    <div class="row no-gutters">
-      <div class="col" style="font-size: 30px ; color:green ; ">
-        <center> <b> Ours </b></center>
-        <video controls playsinline autoplay loop muted src="res/pour_demos/compressed_pour_ours.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col" style="font-size: 30px ; color:green ; ">
-        <center> <b> Diffusion Policy </b> </center>
-        <video controls playsinline autoplay loop muted src="res/pour_demos/compressed_pour_diffusion.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col" style="font-size: 30px ; color:green ; ">
-        <center> <b> Image Net </b> </center>
-        <video controls playsinline autoplay loop muted src="res/pour_demos/compressed_pour_imagenet.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-    </div>
-
-
-
-<hr>
-    <h2 style="text-align: center; text-decoration: underline;"> Grasp and Throw </h2>
-
-    <div class="row no-gutters">
-      <div class="col" style="font-size: 30px ; color:green ; ">
-        <center> <b> Ours </b></center>
-        <video controls playsinline autoplay loop muted src="res/throw_demos/compressed_throw_ours.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col" style="font-size: 30px ; color:green ; ">
-        <center> <b> Diffusion Policy </b> </center>
-        <video controls playsinline autoplay loop muted src="res/throw_demos/compressed_throw_diffusion.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col" style="font-size: 30px ; color:green ; ">
-        <center> <b> Image Net </b> </center>
-        <video controls playsinline autoplay loop muted src="res/throw_demos/compressed_throw_imagenet.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-    </div>
-
-    <hr>
-
-    <h2 style="text-align: center; text-decoration: underline;"> Performance on OOD objects </h2>
-    We present the performance of our policy on the <style="font:italics"> Grasp and Lift</style> task with OOD objects.
-    <div class="row no-gutters">
-      <div class="col" style="font-size: 30px">
-        <video controls playsinline autoplay loop muted src="res/ood/compressed_bottle_pour.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col" style="font-size: 30px">
-        <video controls playsinline autoplay loop muted src="res/ood/compressed_clipper.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col" style="font-size: 30px">
-        <video controls playsinline autoplay loop muted src="res/ood/compressed_medicine.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col" style="font-size: 30px">
-        <video controls playsinline autoplay loop muted src="res/ood/compressed_plier.MOV" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-    </div>
-
-
-
-    <h2 style="text-align: center; text-decoration: underline;"> Samples from sim-in-the-loop retargeting</h2>
-
-    <div class="gap-10"></div>
-    <!-- <center><p style="width:90%; text-align: justify; white-space: normal;">
-        We show that our policy is better than the blind policy in several environments.
-    </p></center> -->
-
-    We provide examples of human videos and the corresponding robot trajectories after sim-in-the-loop retargeting. 
-
-    <div class="row no-gutters">
-        <div class="col" style="font-size: 30px">
-          <center > <b> Human video </b></center>
-            <video controls playsinline autoplay loop muted src="res/human2robot/compressed_drill_orig.mp4" width="97%"
-                   style="border-radius:10px; border:1px solid black"></video>
-        </div>
-        <div class="col" style="font-size: 30px">
-          <center> <b> Robot in simulation </b> </center>
-            <video controls playsinline autoplay loop muted src="res/human2robot/compressed_drill_convert.mp4" width="97%"
-                   style="border-radius:10px; border:1px solid black"></video>
+<hr class="rounded">
+<div id="overview">
+    <div class="approach">
+        <div class="image_container">
+            <!-- <video loop autoplay muted playsinline preload="metadata">
+                <source src="web_assets/method_animation_v4.m4v" type="video/mp4">
+            </video> -->
+            <img src="web_assets/approach_white.png" alt="Fine-tune curves.">
+            <div class="caption">
+                <p>3-D hand-object trajectories from in-the-wild human manipulation videos are re-targeted to a robot embodiment within a
+                physics simulator, resulting in physically grounded robot data. General manipulation priors are learnt from this using
+                generative modelling of trajectories. Such representation enables sample-efficient adaptation for new downstream tasks.</p>
+            </div>
         </div>
     </div>
+    <p>
+        The objective of Hand-Object interaction Pretraing (HOP) is to capture general hand-object interaction priors from
+        videos. Our key intuition is that the basic skills required for manipulation lie on a manifold whose axes are well
+        covered by unstructured human-object interactions. We learn a general manipulation prior implicitly embedded in the
+        weights of a causal transformer, pretrained with a conditional distribution matching objective on sensorimotor robot
+        trajectories. 
+    </p>
 
-    <div class="row no-gutters">
-        <div class="col">
-            <video controls playsinline autoplay loop muted src="res/human2robot/compressed_pitcher_orig.mp4" width="97%"
-                   style="border-radius:10px; border:1px solid black"></video>
+    <p>
+        These trajectories are generated by mapping 3D hand-object interactions from a subset of 100DOH and DexYCB to the robot's embodiment via a
+        physically grounded simulator. We extract sensorimotor information from videos by lifting the human hand and the
+        manipulated object in a shared 3D space. We then bring such 3D representations to a physics simulator, where we map
+        human motion to robot actions. There are several advantages to using a simulator as an intermediary between videos and
+        robot sensorimotor trajectories: (i) we can add physics, inevitably lost in videos, back to the interactions; (ii) it
+        enables the synthesis of large training datasets without putting the physical platform in danger; and (iii) we can add
+        diversity to the data by randomizing the simulation environment, e.g., varying the friction between the robot's joints,
+        the scene's layout, and the object's location relative to the robot. 
+    </p>
+
+    <p> In contrast to previous work, we do not assume a strict alignment of the human’s intent in the video and the downstream robot tasks. This allows us to train on a large number of videos and learn an end-to-end, task-agnostic prior. We find that finetuning this prior using either RL or BC allows fast skill acquisition.</p>
+
+    <!-- <p>
+        Our model, called RPT, is a Transformer that operates on sequences of sensorimotor tokens. Given an input sequence of camera images, proprioceptive states, and actions, we encode the interleaved sequence into tokens, mask out a random subset of the sequence, and predict the masked-out content from the rest. We perform random masking across all modalities and time using a high masking ratio, which encourages the model to learn cross-modal, spatio-temporal representations.
+        <br><br>
+        We encode camera images using a  <a href="https://tetexiao.com/projects/real-mvp">pre-trained vision encoder</a> and use latent representations for sensorimotor sequence learning. This enables us to benefit from strong vision encoders trained on diverse Internet images. Compared to prediction in pixel space, using latent visual representations makes the task feasible. Finally, this design decouples the vision encoder from the sensorimotor context length, making 10 Hz control with 300M parameter models feasible on a physical robot.
+    </p> -->
+
+    <h1 style="color: #002676;">HOP enables sample-efficient BC finetuning</h1>
+    <p>
+              We train a depth-based end-to-end manipulation prior on sensorimotor trajectories extracted from human hand-object interaction videos. We find that this prior can be finetuned to downstream tasks with few demonstrations, outperforming training policies from scratch and other visual-pretraining baselines.
+    </p>
+        <div class="slider_section">
+            <div class="container-2 w-container">
+                <div data-delay="10000" data-animation="slide" class="slider_v2 w-slider" data-autoplay="true"
+                    data-easing="ease" data-hide-arrows="false" data-disable-swipe="false" data-autoplay-limit="0"
+                    data-nav-spacing="3" data-duration="800" data-infinite="true">
+                    <div class="mask w-slider-mask">
+                        <div class="slide w-slide">
+                            <div class="div-block-9 first_video">
+                                <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <!-- <source src="web_assets/franka/pick-blue/IMG_1586-High_Compression_720p.mp4"
+                                                type="video/mp4"> -->
+                                        <source src="web_assets/grasp_demos/compressed_bottle_ours.MOV" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                            <div class="div-block-9">
+                                <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <source src="web_assets/grasp_demos/compressed_cube_ours.MOV" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-slide">
+                            <div class="div-block-9">
+                                <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <source src="web_assets/grasp_demos/compressed_cup_ours.MOV" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-slide">
+                            <div class="div-block-9">
+                                <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <source src="web_assets/grasp_demos/compressed_dino_ours.MOV" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-slide">
+                            <div class="div-block-9">
+                                <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <source src="web_assets/pour_demos/compressed_pour_ours.MOV" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="w-slide"> <div class="div-block-9"> <div class="video_class w-embed">
+                                <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                    <source src="web_web_assets/throw_demos/compressed_throw_ours.MOV"
+                                            type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div> </div> </div> -->
+                        <!-- <div class="w-slide"> <div class="div-block-9"> <div class="video_class w-embed">
+                                <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                    <source src="web_web_assets/franka/pick-red/IMG_9631-High_Compression_720p.mp4"
+                                            type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div> </div> </div> -->
+                        <!-- <div class="w-slide">
+                                <div class="div-block-9"> <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <source src="web_web_assets/franka/destack/IMG_1629-High_Compression_720p.mp4"
+                                                type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div> </div>
+                                <div class="div-block-9 last_block"> <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <source src="web_web_assets/franka/pick-fruit/IMG_9595-High_Compression_720p.mp4"
+                                                type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div> </div>
+                            </div> -->
+                        <div class="w-slide">
+                            <!-- <div class="div-block-9">
+                                <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <source src="web_web_assets/pour_demos/compressed_pour_ours.MOV" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div> -->
+                            <div class="div-block-9 last_block">
+                                <div class="video_class w-embed">
+                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                        <source src="web_assets/throw_demos/compressed_throw_ours.MOV" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-slider-arrow-left">
+                        <div class="w-icon-slider-left"> </div>
+                    </div>
+                    <div class="w-slider-arrow-right">
+                        <div class="w-icon-slider-right"> </div>
+                    </div>
+                    <div class="nerf_slide_nav w-slider-nav w-slider-nav-invert w-round"> </div>
+                </div>
+            </div>
         </div>
-        <div class="col">
-            <video controls playsinline autoplay loop muted src="res/human2robot/compressed_pitcher_convert.mp4" width="97%"
-                   style="border-radius:10px; border:1px solid black"></video>
+
+    <h1 style="color: #002676;">Initialisation with HOP leads to more robust RL policies</h1>
+
+    <p>
+        We finetune the HOP-initialized base policy using RL on three dexterous manipulation tasks in simulation. Finetuning the learnt prior with RL is more sample-efficient, generalizable and leads to more robust policies, outperforming training from scratch and other demonstration-guided RL algorithms.    </p>
+
+    <h1></h1>
+
+    <div class="approach">
+                <div class="image_container">
+                    <!-- <video loop autoplay muted playsinline preload="metadata">
+                                <source src="web_web_assets/method_animation_v4.m4v" type="video/mp4">
+                            </video> -->
+                    <img src="web_assets/all_tasks_3seed.png" alt="Fine-tune curves.">
+                    <div class="caption">
+                        <p>Comparison of HOP-initialized actor with baselines. HOP improves sample-efficiency of online RL across multiple tasks,
+                        particularly when the downstream task and the behaviors in the data are less aligned. Runs
+                        are averaged across three randomly chosen seeds.</p>
+                    </div>
+
+                <img src="web_assets/ood_perturb.png" alt="Fine-tune curves.">
+                <div class="caption">
+                                        <p>Evaluating RL finetuning under out-of-distribution scenarios (Left) To test grasp robustness, we apply to the grasped objects, forces in random direction equal to their weights. When initialized with HOP,
+                                        the resulting policy is more than 3x more robust compared to training PPO from scratch. (Right) We evaluate grasp
+                                        success on multiple objects from the YCB dataset that were not part of the training set. When initialized with HOP, the
+                                        resulting policy is more than 2x more robust compared to training PPO from scratch.</p>
+                </div>
+                </div>
+    </div>
+
+    <h1 style="color: #002676;">Samples from sim-in-the-loop retargeting</h1>
+
+    <p>
+        Below are example trajectories retargeted from human hand-object interaction videos to robots. This approach has the potential scale data collection for robot learning using in-the-wild videos.
+    </p>
+
+        
+        <div class="half_screen_video">
+            <div class="video_container">
+                <video autoplay muted playsinline loop preload="metadata">
+                    <source src="web_assets/human2robot/compressed_drill_orig.mp4" type="video/mp4">
+                </video>
+                <video autoplay muted playsinline loop preload="metadata">
+                    <source src="web_assets/human2robot/compressed_drill_convert.mp4" type="video/mp4">
+                </video>
+            <!-- </div>
+            <div class="video_container"> -->
+                <video autoplay muted playsinline loop preload="metadata">
+                    <source src="web_assets/human2robot/compressed_pitcher_orig.mp4" type="video/mp4">
+                </video>
+                <video autoplay muted playsinline loop preload="metadata">
+                    <source src="web_assets/human2robot/compressed_pitcher_convert.mp4" type="video/mp4">
+                </video>
+        
+            </div>
+        
+        
+
+    
+    </div>
+
+    <h1 style="color: #002676;">Retargeting in-the-wild videos</h1>
+    <p>
+    We provide examples of 3-D hand-object reconstructions from in-the-wild videos. We display samples of the extracted hand
+    mesh and the object point cloud in the same 3-D space. While occlusions lead to increased detection noise, the higher-level details of hand-object interaction such as
+    affordances, pre-grasp and post-grasp trajectories are preserved.
+    </p>
+
+        <div class="half_screen_video">
+            <div class="video_container">
+                <video autoplay muted playsinline loop preload="metadata">
+                    <source src="web_assets/human2robot/compressed_ladel_1.mp4" type="video/mp4">
+                </video>
+                <video autoplay muted playsinline loop preload="metadata">
+                    <source src="web_assets/human2robot/compressed_occlusion_1.mp4" type="video/mp4">
+                </video>
+            <!-- </div>
+            <div class="video_container"> -->
+                <video autoplay muted playsinline loop preload="metadata">
+                    <source src="web_assets/human2robot/compressed_occlusion_2.mp4" type="video/mp4">
+                </video>
+                <video autoplay muted playsinline loop preload="metadata">
+                    <source src="web_assets/human2robot/compressed_pour_1.mp4" type="video/mp4">
+                </video>
+        
+            </div>
+        
+        </div>
+
+    <!--
+    <h1>Can Leverage Different Pre-training Data</h1>
+    <p>
+        Next, we study the impact of different pre-training data on fine-tuning performance. Specifically, we first pre-train our model on data from different tasks: stacking, picking, successful bin picking trajectories, and all bin picking trajectories. We then fine-tune and evaluate the model on stacking. Below, we see that RPT obtains similar performance on stacking when pre-trained on stacking, picking, or bin picking, suggesting that it is able to learn sensorimotor representations from data of different tasks. We also observe a lower performance when pre-trained on imperfect (both successful and failed) trajectories of bin picking, highlighting the importance of pre-training data quality.
+    </p>
+    <div class="barplot">
+        <div class="image_container">
+            <div class="caption">
+                <p>Pre-training on different data</p>
+            </div>
+            <img style='width: 95%' src="web_assets/pretrain_data.png" alt="Pre-training data.">
         </div>
     </div>
-    <hr>
-	<hr>
+    -->
 
-  <h2 style="text-align: center; text-decoration: underline;"> Hand-object reconstructions from in-the-wild videos</h2>
-  
-  <div class="gap-10"></div>
-  <!-- <center><p style="width:90%; text-align: justify; white-space: normal;">
-          We show that our policy is better than the blind policy in several environments.
-      </p></center> -->
-
-    We provide examples of  3-D hand-object reconstructions from in-the-wild videos. We display samples of the extracted hand mesh and the object point cloud in the same 3-D space. 
-  
-  <div class="row no-gutters">
-    <div class="col" style="font-size: 30px">
-      <video controls playsinline autoplay loop muted src="res/human2robot/compressed_pour_1.mp4" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
+    <!--
+    <h1>High Masking Ratio Across All Modalities</h1>
+    <p>
+        Finally, we perform ablation studies on different masking types and ratios. First, we find that masking across both modalities and times (token masking) is considerably more effective than masking one modality or one step at the time. Second, we find that masking with a high-masking ratio is important for good performance.
+    </p>
+    <div class="barplot">
+        <div class="image_container">
+            <div class="caption">
+                <p>Masking types (left and middle) and masking ratio (right)</p>
+            </div>
+            <img src="web_assets/masking_ablation.png" alt="Masking ablations.">
+        </div>
     </div>
-    <div class="col" style="font-size: 30px">
-      <video controls playsinline autoplay loop muted src="res/human2robot/compressed_ladel_1.mp4" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-  </div>
+    -->
 
-  While occlusions lead to increased detection noise, the high-level concepts of hand-object interaction—such as
-  affordances, pre-grasp and post-grasp trajectories—remain present
-  
-  <div class="gap-10"></div>
-  <!-- <center><p style="width:90%; text-align: justify; white-space: normal;">
-            We show that our policy is better than the blind policy in several environments.
-        </p></center> -->
+    <h1 style="color: #002676;">More Demonstrations</h1>
+    <p> 
+       Following are more demonstrations of our BC-finetuned policy in the real world on a diverse set of objects.
+    </p>   
+            <div class="slider_section">
+                <div class="container-2 w-container">
+                    <div data-delay="10000" data-animation="slide" class="slider_v2 w-slider" data-autoplay="true"
+                        data-easing="ease" data-hide-arrows="false" data-disable-swipe="false" data-autoplay-limit="0"
+                        data-nav-spacing="3" data-duration="800" data-infinite="true">
+                        <div class="mask w-slider-mask">
+                            <div class="slide w-slide">
+                                <div class="div-block-9 first_video">
+                                    <div class="video_class w-embed">
+                                        <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                            <!-- <source src="web_assets/franka/pick-blue/IMG_1586-High_Compression_720p.mp4"
+                                                            type="video/mp4"> -->
+                                            <source src="web_assets/ood/compressed_bottle_pour.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                <div class="div-block-9">
+                                    <div class="video_class w-embed">
+                                        <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                            <source src="web_assets/ood/compressed_clipper.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-slide">
+                                <div class="div-block-9">
+                                    <div class="video_class w-embed">
+                                        <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                            <source src="web_assets/ood/compressed_eyeglass.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-slide">
+                                <div class="div-block-9">
+                                    <div class="video_class w-embed">
+                                        <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                            <source src="web_assets/ood/compressed_medicine.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-slide">
+                                <div class="div-block-9">
+                                    <div class="video_class w-embed">
+                                        <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                            <source src="web_assets/ood/compressed_plier.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-slide">
+                                <div class="div-block-9">
+                                    <div class="video_class w-embed">
+                                        <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                            <source src="web_assets/ood/compressed_cat_resized.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
 
-  
-  <div class="row no-gutters">
-    <div class="col" style="font-size: 30px">
-      <video controls playsinline autoplay loop muted src="res/human2robot/compressed_occlusion_1.mp4" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-    <div class="col" style="font-size: 30px">
-      <video controls playsinline autoplay loop muted src="res/human2robot/compressed_occlusion_2.mp4" width="97%"
-        style="border-radius:10px; border:1px solid black"></video>
-    </div>
-  </div>
+                                                        <!-- <div class="w-slide">
+                                                            <div class="div-block-9">
+                                                                <div class="video_class w-embed">
+                                                                    <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                                                        <source src="web_assets/ood/compressed_medicine.MOV" type="video/mp4">
+                                                                        Your browser does not support the video tag.
+                                                                    </video>
+                                                                </div>
+                                                            </div>
+                                                        </div> -->
+                            <!-- <div class="w-slide"> <div class="div-block-9"> <div class="video_class w-embed">
+                                            <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                                <source src="web_assets/throw_demos/compressed_throw_ours.MOV"
+                                                        type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div> </div> </div> -->
+                            <!-- <div class="w-slide"> <div class="div-block-9"> <div class="video_class w-embed">
+                                            <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                                <source src="web_assets/franka/pick-red/IMG_9631-High_Compression_720p.mp4"
+                                                        type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div> </div> </div> -->
+                            <!-- <div class="w-slide">
+                                            <div class="div-block-9"> <div class="video_class w-embed">
+                                                <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                                    <source src="web_assets/franka/destack/IMG_1629-High_Compression_720p.mp4"
+                                                            type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            </div> </div>
+                                            <div class="div-block-9 last_block"> <div class="video_class w-embed">
+                                                <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                                    <source src="web_assets/franka/pick-fruit/IMG_9595-High_Compression_720p.mp4"
+                                                            type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            </div> </div>
+                                        </div> -->
+                            <!-- <div class="w-slide">
+                                <div class="div-block-9">
+                                    <div class="video_class w-embed">
+                                        <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                            <source src="web_assets/pour_demos/compressed_cat.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div>
+                                <div class="div-block-9 last_block">
+                                    <div class="video_class w-embed">
+                                        <video width=100% height=100% autoplay muted controls loop preload="metadata">
+                                            <source src="web_assets/throw_demos/compressed_throw_ours.MOV" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                </div> 
+                            </div> -->
+                        </div>
+                        <div class="w-slider-arrow-left">
+                            <div class="w-icon-slider-left"> </div>
+                        </div>
+                        <div class="w-slider-arrow-right">
+                            <div class="w-icon-slider-right"> </div>
+                        </div>
+                        <div class="nerf_slide_nav w-slider-nav w-slider-nav-invert w-round"> </div>
+                    </div>
+                </div>
+            </div>
 
-    <h2 style="text-align: center; text-decoration: underline;"> Simulation tasks</h2>
-
-    We provide examples of learnt behaviours in simulated RL tasks with our approach.
-
-    <div class="gap-30"></div>
-    <h3 style="text-align: center; text-decoration: underline;"> Grasp and Lift </h3>
-    
-    <div class="row no-gutters">
-      <div class="col">
-        <video controls playsinline autoplay loop muted src="res/grasp_sim/compressed_grasp_1.mp4" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col">
-        <video controls playsinline autoplay loop muted src="res/grasp_sim/compressed_grasp_2.mp4" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col">
-        <video controls playsinline autoplay loop muted src="res/grasp_sim/compressed_grasp_3.mp4" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-    </div>
-
-    <div class="gap-30"></div>
-    <h3 style="text-align: center; text-decoration: underline;">  Grasp and Throw </h3>
-
-    
-    <div class="row no-gutters">
-      <div class="col">
-        <video controls playsinline autoplay loop muted src="res/throw_sim/compressed_throw_1.mp4" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col">
-        <video controls playsinline autoplay loop muted src="res/throw_sim/compressed_throw_2.mov" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-      <div class="col">
-        <video controls playsinline autoplay loop muted src="res/throw_sim/compressed_throw_3.mp4" width="97%"
-          style="border-radius:10px; border:1px solid black"></video>
-      </div>
-    </div>
-    
-    
-
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="res/js/bootstrap.min.js"></script>
-
+    <h1>BibTeX</h1>
+    <p class="bibtex">
+        <!-- @article{Rpt2023,<br>
+        &nbsp;&nbsp;title={Robot Learning with Sensorimotor Pre-training},<br>
+        &nbsp;&nbsp;author={Ilija Radosavovic and Baifeng Shi and Letian Fu and Ken Goldberg and Trevor Darrell and Jitendra Malik},<br>
+        &nbsp;&nbsp;year={2023},<br>
+        &nbsp;&nbsp;journal={arXiv:2306.10007}<br>
+        } -->
+    </p>
 </div>
+<script type="text/javascript">
+    /* https://stackoverflow.com/questions/3027707/how-to-change-the-playing-speed-of-videos-in-html5 */
+    document.querySelector('video').defaultPlaybackRate = 1.0;
+    document.querySelector('video').play();
+
+    var videos =document.querySelectorAll('video');
+    for (var i=0;i<1;i++)
+    {
+        videos[i].playbackRate = 1.0;
+    }
+</script>
+<script>
+    /* https://stackoverflow.com/questions/21163756/html5-and-javascript-to-play-videos-only-when-visible */
+    var videos = document.getElementsByTagName("video");
+
+    function checkScroll() {
+        var fraction = 0.5; // Play when 70% of the player is visible.
+
+        for(var i = 0; i < 1; i++) {  // only apply to the first video
+
+            var video = videos[i];
+
+            var x = video.offsetLeft, y = video.offsetTop, w = video.offsetWidth, h = video.offsetHeight, r = x + w, //right
+                b = y + h, //bottom
+                visibleX, visibleY, visible;
+
+            visibleX = Math.max(0, Math.min(w, window.pageXOffset + window.innerWidth - x, r - window.pageXOffset));
+            visibleY = Math.max(0, Math.min(h, window.pageYOffset + window.innerHeight - y, b - window.pageYOffset));
+
+            visible = visibleX * visibleY / (w * h);
+
+            if (visible > fraction) {
+                video.play();
+            } else {
+                video.pause();
+            }
+
+        }
+
+    }
+    window.addEventListener('scroll', checkScroll, false);
+    window.addEventListener('resize', checkScroll, false);
+</script>
+<script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=51e0d73d83d06baa7a00000f"
+        type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+        crossorigin="anonymous"></script>
+<script src="https://uploads-ssl.webflow.com/51e0d73d83d06baa7a00000f/js/webflow.fd002feec.js"
+        type="text/javascript"></script>
+</body>
 </html>
