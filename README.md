@@ -1,6 +1,6 @@
 # Hand-object Interaction Pretraining from Videos
 
-This repo contains code for the paper [Hand-object interaction Pretraining from Videos](https://hgaurav2k.github.io/manuscript.pdf)
+This repo contains code for the paper [Hand-object interaction Pretraining from Videos](https://hgaurav2k.github.io/hop/pdf/manuscript.pdf)
 
 <!-- Published in the International Conference of Computer Vision and Pattern Recognition (CVPR) 2019. -->
 
