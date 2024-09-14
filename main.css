@@ -942,7 +942,7 @@ html.w-mod-touch * {
 .w-container {
     margin-left: auto;
     margin-right: auto;
-    max-width: 45%
+    max-width: 60%
 }
 
 .w-container:after, .w-container:before {
