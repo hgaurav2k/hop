@@ -16,7 +16,6 @@ import time
 import torch
 from copy import deepcopy 
 from algo.ppo_transformer.experience import ExperienceBuffer
-from algo.ppo_transformer.mem_eff_experience import MemoryEfficientExperienceBuffer
 from algo.models.models import  SavingModel
 from algo.models.running_mean_std import RunningMeanStd
 from utils.misc import AverageScalarMeter
