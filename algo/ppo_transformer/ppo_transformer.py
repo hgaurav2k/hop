@@ -31,7 +31,6 @@ import cv2
 from PIL import Image 
 import PIL 
 from algo.models.rt_actor_critic import RTActorCritic
-from algo.models.pt_actor_critic import PTActorCritic
 import json 
 class PPOTransformer(nn.Module):
 
@@ -67,18 +66,6 @@ class PPOTransformer(nn.Module):
 
         self.log_video = self.env.log_video
 
-        # if config['pc_input'] and config["enableProprioHistory"]:
-        #     net_config = {
-        #         'actor_units': self.network_config.mlp.units,
-        #         'actions_num': self.actions_num,
-        #         'point_cloud_index': (self.env.point_cloud_begin_index, self.env.point_cloud_end_index),
-        #         'point_cloud_out_dim' : self.network_config.pc_mlp.out_dim,
-        #         'point_cloud_num': self.env.point_cloud_sampled_dim,
-        #         'input_shape': self.obs_shape[0] - self.env.point_cloud_sampled_dim*3 +  self.network_config.pc_mlp.out_dim,
-        #     }
-        #     self.model = PointNetActorCritic(net_config)
-        
-        #has to have an actor critic
         kwargs = {} 
 
         if config.train.ppo.point_cloud_input_to_value:
@@ -93,11 +80,6 @@ class PPOTransformer(nn.Module):
 
         # if self.network_config.full_autoregressive:
         self.model = RTActorCritic(config, self.network_config, device = self.device, kwargs=kwargs)
-        # else:
-        #     self.model = PTActorCritic(self.network_config,kwargs)
-
-        # if config.wandb_activate and rank == 0:
-        #    wandb.watch(self.model,log="all",log_freq=1)
 
         # construct the local model
 
