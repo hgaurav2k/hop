@@ -109,26 +109,23 @@ class Trainer:
         t = time.time()
         for i, batch in enumerate(tqdm.tqdm(self.train_dataloader)):
             
-            print(f"dataloading: {time.time()-t}")
-            t = time.time()
+            
             proprio, object_pc, actions, timesteps, attention_mask = batch
             batch = proprio.to(self.train_dataset.device), object_pc.to(self.train_dataset.device), \
                 actions.to(self.train_dataset.device), timesteps.to(self.train_dataset.device), \
                 attention_mask.to(self.train_dataset.device) if attention_mask is not None else None
 
-            print(f"moving to device: {time.time()-t}")
-            t = time.time()
+        
             train_loss = self.train_step(batch)
-            print(f"train step:, {time.time()-t}")
             t = time.time()
 
             if self.full_autoregressive:
+                
                 if self.use_pc_loss and self.action_input:
                     train_losses_pc.append(train_loss['pc'])
-                train_losses_action.append(train_loss['action'])
-                train_losses.append(train_loss['full'])
-            else:
-                train_losses.append(train_loss)
+            
+            train_losses.append(train_loss['loss'])
+        
 
             if self.scheduler is not None:
                 self.scheduler.step()
@@ -142,8 +139,6 @@ class Trainer:
                 if self.full_autoregressive:
                     logs['training/train_loss_mean'] = np.mean(train_losses)
                     logs['training/train_loss_std'] = np.std(train_losses)
-                    logs['training/train_loss_action_mean'] = np.mean(train_losses_action)
-                    logs['training/train_loss_action_std'] = np.std(train_losses_action)
                     if self.use_pc_loss and self.action_input:
                         logs['training/train_loss_pc_mean'] = np.mean(train_losses_pc)
                         logs['training/train_loss_pc_std'] = np.std(train_losses_pc)
@@ -169,9 +164,6 @@ class Trainer:
                     print(f'{k}: {v}')
             
 
-            print(f"logging: {time.time()-t}")
-            t = time.time()
-
         return logs
     
     def eval_epoch(self, iter_num=0, print_logs=False):
@@ -196,17 +188,13 @@ class Trainer:
             if self.full_autoregressive:
                 if self.use_pc_loss and self.action_input:
                     val_losses_pc.append(val_loss['pc'])
-                val_losses_next_proprio.append(val_loss['next_proprio'])
-                val_losses_action.append(val_loss['action'])
-                val_losses.append(val_loss['full'])
+                val_losses.append(val_loss['loss'])
             else:   
                 val_losses.append(val_loss)
 
 
         if self.logger:
             if self.full_autoregressive:
-                logs['training/val_loss_action_mean'] = np.mean(val_losses_action)
-                logs['training/val_loss_action_std'] = np.std(val_losses_action)
                 logs['training/val_loss_full_mean'] = np.mean(val_losses)
                 logs['training/val_loss_full_std'] = np.std(val_losses)
                 if self.use_pc_loss and self.action_input:
@@ -493,13 +481,18 @@ class RobotTrainer(Trainer):
                 pc_preds = pred_dict['pc']
                 pc_dim = pc_preds.shape[2]
             else:
-                action_preds, _ = self.model.forward(
+                pred_dict, _ = self.model.forward(
                     proprio, depth, timesteps=timesteps, attention_mask=attention_mask,
                 )
+                
         else:
-            action_preds, _ = self.model.forward(
+            pred_dict, _ = self.model.forward(
                 proprio, object_pc, actions, timesteps, attention_mask=attention_mask,
             )
+        
+        action_preds = pred_dict["action"]
+
+
 
         act_dim = action_preds.shape[2]
 
@@ -561,9 +554,7 @@ class RobotTrainer(Trainer):
                     self.diagnostics['training/pc_error'] = loss_pc.detach().cpu().item()
         
         if self.full_autoregressive:
-            return_dict = {'action': loss_action.detach().cpu().item(),
-                           'next_proprio': loss_next_proprio.detach().cpu().item(),
-                           'full': loss.detach().cpu().item()}
+            return_dict = {'loss': loss.detach().cpu().item()}
             if self.use_pc_loss and self.action_input:
                 return_dict['pc'] = loss_pc.detach().cpu().item()
             return return_dict
@@ -638,9 +629,7 @@ class RobotTrainer(Trainer):
             if self.use_pc_loss and self.action_input:
                 loss += loss_pc
             loss = self.loss_fn(action_preds,action_target)
-            return_dict = {'action': loss_action.detach().cpu().item(),
-                           'next_proprio': loss_next_proprio.detach().cpu().item(),
-                           'full': loss.detach().cpu().item()}
+            return_dict = {'loss': loss_action.detach().cpu().item()}
             if self.use_pc_loss and self.action_input:
                 return_dict['pc'] = loss_pc.detach().cpu().item()
             return return_dict

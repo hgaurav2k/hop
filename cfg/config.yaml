@@ -71,7 +71,6 @@ defaults:
   - task: AllegroXarmNew
   - train: ${task}PPO
   - pretrain: ${task}
-  - phase2: ${task}Dagger
 
 # set the directory where the output files get saved
 hydra:

@@ -9,7 +9,6 @@ from torch.optim import Adam, AdamW
 from algo.pretrained.trainer import RobotTrainer 
 import wandb 
 from algo.pretrained.robot_transformer_ar import RobotTransformerAR
-from algo.pretrained.policy_transformer import PolicyTransformer
 from algo.pretrained.robot_dataset import RobotDataset , collate_fn
 import os 
 from datetime import datetime 
@@ -125,10 +124,6 @@ def main(config: DictConfig):
             save_dir = None
             logger = None 
 
-        if config.pretrain.wandb_activate:
-            wandb.config.update(config)
-            # wandb.watch(model, log='all')
-
         cprint(f"Model built", color='green', attrs=['bold'])
 
         if config.pretrain.training.load_checkpoint:
@@ -173,7 +168,8 @@ def main(config: DictConfig):
             outputs = trainer.train_epoch(iter_num=i, 
                                           print_logs=True)
             if config.pretrain.wandb_activate:
-                wandb.log(outputs)
+                wandb.log(outputs, commit=True)
+
             
             if capture_video:
                 fps = int(1/(config.task.sim.dt*config.task.env.controlFrequencyInv))

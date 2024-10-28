@@ -1,3 +1,10 @@
 *.zip
 outputs/
 assets/
+*/*/.pyc
+*.pyc
+__pycache__/
+*/__pycache__/
+wandb/
+*.log
+algo/pretrained/models/*
