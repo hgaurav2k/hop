@@ -201,4 +201,95 @@ class RobotTransformerAR(nn.Module):
 
         action_preds = pred_dict['action'][:, -self.history_fill]
 
-        return action_preds
+        return 
+    
+        
+    @torch.no_grad()
+    def run_multi_env(self,env, cfg=None, **kwargs):
+        
+        self.eval()
+
+        next_obs_dict = env.reset()
+
+        num_envs = env.num_envs
+
+        episode_rewards = torch.zeros((num_envs,)).to(self.device)
+        episode_lengths = torch.zeros((num_envs,)).to(self.device)
+
+        info_dict = {'episode_reward': [], 'episode_length': []}
+
+        q_limits = {'lower': env.arm_hand_dof_lower_limits,
+                    'upper': env.arm_hand_dof_upper_limits}
+
+        def scale_q(q, limits):
+            q = (q - limits['lower'][None]) / (limits['upper'][None] - limits['lower'][None])
+            q = 2 * q - 1
+            return q
+
+        # Unscale the actions
+        def unscale_q(q, limits):
+            q = 0.5 * (q + 1) * (limits['upper'][None] - limits['lower'][None]) + limits['lower'][None]
+            return q
+
+        use_residuals = kwargs.get('use_residuals', False)
+
+        assert not use_residuals, "Residuals not supported in this mode"
+
+        done = False
+
+        # assert self.time_shift == 0, "Time shift not supported in this mode"
+        if self.time_shift > 0:
+            print("Time shift not fully supported in multiple envs. We'll still use it, but should be fixed.")
+        timestep = 0
+
+        while True:
+
+            # New data coming from env
+            action_hist_input = next_obs_dict['action_buf'].clone()
+            if not self.cfg.pretrain.model.scale_action:
+                action_hist_input = unscale_q(action_hist_input, q_limits)
+            action_hist_input = torch.cat((action_hist_input, torch.zeros_like(action_hist_input[:,-1:])), dim=1)
+            proprio_hist_input = next_obs_dict['proprio_buf'].clone()
+            if self.cfg.pretrain.model.scale_proprio:
+                proprio_hist_input = scale_q(proprio_hist_input, q_limits)
+
+            obj_pc_hist_input = next_obs_dict['pc_buf'].clone()
+            attn_mask = next_obs_dict['attn_mask'].clone()
+            ts = next_obs_dict['timesteps'].clone().long()
+
+            with torch.no_grad():
+                if self.action_input:
+                    pred_dict, _ = self.forward(
+                        proprio_hist_input, obj_pc_hist_input, action_hist_input, ts, attention_mask=attn_mask, **kwargs)
+                else:
+                    pred_dict, _ = self.forward(
+                        proprio_hist_input, obj_pc_hist_input, timesteps=ts, attention_mask=attn_mask, **kwargs)
+
+                pred_action = pred_dict['action'][:, -1]
+                
+                if not self.cfg.pretrain.model.scale_action:
+                    pred_action = scale_q(pred_action, q_limits)
+            
+            
+            next_obs_dict, r, done, info = env.step(pred_action.clone())
+            episode_rewards += r
+
+            at_reset_env_ids = torch.where(done)[0]
+            for env_id in at_reset_env_ids:
+                info_dict['episode_reward'].append(episode_rewards[env_id].item())
+                info_dict['episode_length'].append(episode_lengths[env_id].item())
+                episode_rewards[env_id] = 0
+                episode_lengths[env_id] = 0
+
+            timestep += 1 
+            episode_lengths += 1
+
+            if timestep > 2*env.max_episode_length:
+                break
+
+        # Transfor the list into a tensor
+        info_dict['episode_reward'] = torch.tensor(info_dict['episode_reward'])
+        info_dict['episode_length'] = torch.tensor(info_dict['episode_length'])
+        info_dict = env.linearize_info(info_dict)
+        
+        return info_dict

@@ -20,6 +20,7 @@ from utils.logger import Logger
 import random 
 import numpy as np 
 from torch.optim.lr_scheduler import CosineAnnealingLR 
+import imageio
 
 @hydra.main(config_name='config', config_path='../cfg/')
 def main(config: DictConfig):
@@ -176,9 +177,10 @@ def main(config: DictConfig):
                 print(f"Capturing video from simulation")
                 env.start_video_recording()
                 info_dict = model.run_multi_env(env, cfg=config)
-                video_frames = env.stop_video_recording()
-                logger.log_video(video_frames, name="Test Performance", fps=fps, step=(i+1)*len(trainer.train_dataloader))
-                logger.log_dict(info_dict, (i+1)*len(trainer.train_dataloader), verbose=False)
+                video_frames = env.stop_video_recording() 
+                video_path = os.path.join(experiment_folder, f'{config.pretrain.wandb_name}_video.mp4')
+                video_frames = [np.array(frame.detach().cpu()).astype(np.uint8) for frame in video_frames]
+                imageio.mimsave(video_path, video_frames, fps=fps)
                 env.video_frames = []
 
 
